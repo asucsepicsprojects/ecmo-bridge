@@ -34,4 +34,4 @@ ECMO Bridge is a state-of-the-art application designed to efficiently allocate E
 
 ## Important Note
 
-This project is proudly part of the EPICS initiative at Arizona State University (ASU). It is being actively developed by the Automated Medical Resource Allocation Team, aiming to revolutionize how medical resources are managed and allocated in critical care scenarios.
+This project is proudly part of the EPICS initiative at Arizona State University (ASU). It is being actively developed by the Automated Medical Resource Allocation Team, aiming to revolutionize how medical resources are managed and allocated in critical care scenarios.Test
