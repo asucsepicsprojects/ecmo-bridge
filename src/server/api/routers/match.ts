@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { ecmos, patients, matches, hospitals } from "~/server/db/schema";
-import { checkAuth } from "../functions";
+import { checkAuth } from "src/server/api/auth";
 import { eq, and, or } from "drizzle-orm";
 import { calculateDistance } from "../functions";
 

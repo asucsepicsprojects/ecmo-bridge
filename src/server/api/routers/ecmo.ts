@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { ecmos } from "~/server/db/schema";
-import { checkAuth } from "../functions";
+import { checkAuth } from "src/server/api/auth";
 import { eq } from "drizzle-orm";
 import { count } from "drizzle-orm";
 import { deleteMatch } from "./match";
