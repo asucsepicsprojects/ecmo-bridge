@@ -1,32 +1,38 @@
 {
   "compilerOptions": {
-    /* Base Options: */
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "target": "es2022",
-    "allowJs": true,
-    "resolveJsonModule": true,
-    "moduleDetection": "force",
-    "isolatedModules": true,
-    /* Strictness */
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
+    /* Basic Options */
+    "target": "ES2022",                         // Target ES2022 for top-level await support
+    "module": "Node16",                         // Use ESNext to support top-level await
+    "moduleResolution": "Node16",                 // Resolve modules in Node.js style
+    "esModuleInterop": true,                    // Enable interop between CommonJS and ES modules
+    "resolveJsonModule": true,                  // Allow importing JSON files
+    "allowJs": true,                            // Allow compiling .js files
+    "checkJs": true,                            // Check .js files for errors
+    "skipLibCheck": true,                       // Skip type checking for libraries
+
+    /* Output options */
+    "outDir": "./dist",                         // Specify output directory for compiled JS files
+    "noEmit": false,                            // Emit output files
+
+    /* Strict Type-Checking Options */
+    "strict": true,                             // Enable all strict type-checking options
+    "noUncheckedIndexedAccess": true,           // Ensure that all index accesses are checked
+
+    /* Other Options */
+    "isolatedModules": true,                    // Ensure each file can be safely transpiled without needing other files
+    "incremental": true,                        // Enable incremental builds for faster rebuilds
+
+    /* Type Definitions */
     "typeRoots": ["./node_modules/@types", "./src/types"],
-    "checkJs": true,
-    /* Bundled projects */
-    "lib": ["dom", "dom.iterable", "ES2022"],
-    "noEmit": true,
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "jsx": "preserve",
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "incremental": true,
+
+    /* Bundled Libraries */
+    "lib": ["dom", "dom.iterable", "ES2022"],   // Use ES2022 and DOM library features
+
+    /* JSX Options (If applicable to the project) */
+    "jsx": "preserve",                          // JSX transformation will be handled by a different tool
+
     /* Path Aliases */
-    "baseUrl": ".",
+    "baseUrl": ".",                             // Base directory for resolving paths
     "paths": {
       "~/*": ["./src/*"],
       "@/subframe/*": ["./src/subframe/*"]
@@ -41,5 +47,5 @@
     "**/*.js",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]           // Exclude node_modules and the output directory
 }

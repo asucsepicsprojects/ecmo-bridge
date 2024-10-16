@@ -49,18 +49,23 @@
     "@trpc/client": "11.0.0-rc.359",
     "@trpc/react-query": "11.0.0-rc.359",
     "@trpc/server": "11.0.0-rc.359",
+    "body-parser": "^1.20.3",
     "class-variance-authority": "^0.7.0",
     "classnames": "2.3.2",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
+    "cors": "^2.8.5",
     "count-up": "^1.0.4",
     "date-fns": "^3.6.0",
+    "dotenv": "^16.4.5",
     "drizzle-orm": "^0.29.5",
+    "express": "^4.21.1",
     "feather-icons": "^4.29.2",
     "framer-motion": "^11.2.6",
     "geist": "^1.3.0",
     "lucide-react": "^0.376.0",
     "mini-svg-data-uri": "^1.4.4",
+    "mongodb": "^6.9.0",
     "next": "^14.2.3",
     "next-themes": "^0.3.0",
     "postgres": "^3.4.4",
@@ -80,14 +85,17 @@
     "tailwind-merge": "^2.3.0",
     "tailwind-variants": "^0.2.1",
     "tailwindcss-animate": "^1.0.7",
+    "ts-node": "^10.9.2",
     "use-places-autocomplete": "^4.0.1",
     "vaul": "^0.9.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/eslint": "^8.56.10",
+    "@types/express": "^5.0.0",
     "@types/google.maps": "^3.55.9",
-    "@types/node": "^20.12.12",
+    "@types/mongodb": "^4.0.6",
+    "@types/node": "^20.16.11",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@types/react-scroll": "^1.8.10",
@@ -102,10 +110,15 @@
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.14",
     "tailwindcss": "^3.4.3",
-    "typescript": "^5.4.5"
+    "typescript": "^5.6.3"
   },
   "ct3aMetadata": {
     "initVersion": "7.32.0"
   },
-  "packageManager": "pnpm@9.0.4"
+  "packageManager": "pnpm@9.0.4",
+  "description": "ECMO Bridge is a state-of-the-art application designed to efficiently allocate ECMO (Extracorporeal Membrane Oxygenation) machines to patients in critical need. By integrating a sophisticated dynamic matching algorithm, ECMO Bridge assesses multiple vital factors to ensure optimal resource distribution and enhanced patient care.",
+  "main": "next.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

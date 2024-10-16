@@ -36,50 +36,44 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var supabase_js_1 = require("@supabase/supabase-js");
-// var supabaseUrl = 'https://ryiooykqhtgwkpirqydt.supabase.co'
-var supabaseUrl = 'postgresql://postgres.ryiooykqhtgwkpirqydt:ASU_EPICS@2024@aws-0-us-west-1.pooler.supabase.com:6543/postgres';
-// var supabaseUrl = 'postgres://postgres.dmzdavgodntkwzstpzog:qnsy0NHeAVB48mXe@aws-0-us-west-1.pooler.supabase.com:5432/postgres'
-// const supabaseKey = process.env.ECMOBRIDGE_DATABASE_API_KEY
-// var supabaseUrl = 'https://ryiooykqhtgwkpirqydt.supabase.co';
-var supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ5aW9veWtxaHRnd2twaXJxeWR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjc4Mjg5MTMsImV4cCI6MjA0MzQwNDkxM30.QE7Z6a_p4S_mrytO1PQVlgXS9Y9BwC6qr6T8_4z_VE4";
-var supabase = (0, supabase_js_1.createClient)(supabaseUrl, supabaseKey);
-// Fetch the first record from the Supabase table
-var fetchFirstRecord = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, ECMO_TEST_DB, error, error_1;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
-            case 0:
-                _b.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, supabase
-                        .from('ECMO_TEST_DB')
-                        .select('*')];
-            case 1:
-                _a = _b.sent(), ECMO_TEST_DB = _a.data, error = _a.error;
-                console.log("Pulled data!");
-                return [3 /*break*/, 3];
-            case 2:
-                error_1 = _b.sent();
-                console.error('Error fetching the record:', error_1);
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
-        }
-    });
-}); };
-function beautifulFunctionName(supabaseUrl) {
+exports.connectToAtlasDB = connectToAtlasDB;
+exports.getAtlasDB = getAtlasDB;
+var mongodb_1 = require("mongodb");
+// Ensure that the password doesn't contain special characters
+// Ensure to set up a user with permissions only for reading and writing in the database
+var uri = "mongodb+srv://manasUser:ASUEPICS2024@ecmocluster.g7m07.mongodb.net/ecmo_data?retryWrites=true&w=majority&appName=EcmoCluster";
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+var dbConnectionObject = null;
+function connectToAtlasDB(callback) {
     return __awaiter(this, void 0, void 0, function () {
-        var response;
+        var client, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, fetch(supabaseUrl)];
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    client = new mongodb_1.MongoClient(uri, {
+                        serverApi: {
+                            version: mongodb_1.ServerApiVersion.v1,
+                            strict: true,
+                            deprecationErrors: true,
+                        }
+                    });
+                    return [4 /*yield*/, client.connect()];
                 case 1:
-                    response = _a.sent();
-                    console.log(response);
-                    return [2 /*return*/, response];
+                    _a.sent();
+                    dbConnectionObject = client.db('EcmoCluster');
+                    console.log(dbConnectionObject.databaseName, "connected");
+                    return [2 /*return*/, callback()];
+                case 2:
+                    error_1 = _a.sent();
+                    console.log("Error connecting to MongoDB", error_1);
+                    return [2 /*return*/, callback(error_1)];
+                case 3: return [2 /*return*/];
             }
         });
     });
 }
-console.log("Fetching the status");
-console.log(beautifulFunctionName(supabaseUrl));
-// console.log(fetchFirstRecord());
+function getAtlasDB() {
+    return dbConnectionObject;
+}
+console.log(connectToAtlasDB(function () { }));
