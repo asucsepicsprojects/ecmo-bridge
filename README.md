@@ -11,9 +11,12 @@ ECMO Bridge is a state-of-the-art application designed to efficiently allocate E
 - [x] Integrate tRPC for type-safe remote procedure calls
 - [x] Add footer
 - [x] Design backend (matching) logic
+- [ ] Matchlist.ts
+- [ ] Patients & ECMOs
+- [ ] 
 - [ ] Realtime matching update
 - [ ] Maybe add Clerk blocklist?
-- [ ] Additional chat feature
+      
 
 ## Key Features
 
