@@ -91,7 +91,11 @@ export const matchRouter = createTRPCRouter({
     });
 
     if (!hospital) {
-      throw new Error("Hospital not found");
+      // Instead of throwing an error, return an empty array with a message
+      return {
+        matches: [],
+        message: "Please create a hospital profile to view matches."
+      };
     }
 
     const patientList = await ctx.db.query.patients.findMany({
@@ -99,7 +103,10 @@ export const matchRouter = createTRPCRouter({
     });
 
     if (patientList.length === 0) {
-      throw new Error("No patients for your hospital are yet in queue.");
+      return {
+        matches: [],
+        message: "No patients for your hospital are yet in queue."
+      };
     }
 
     const matchesList = await ctx.db.query.matches.findMany({
@@ -107,7 +114,10 @@ export const matchRouter = createTRPCRouter({
     });
 
     if (matchesList.length === 0) {
-      throw new Error("No matches found for your hospital.");
+      return {
+        matches: [],
+        message: "No matches found for your hospital."
+      };
     }
     // Enhance matches with patient details
     const enhancedMatches = await Promise.all(
@@ -127,7 +137,10 @@ export const matchRouter = createTRPCRouter({
         };
       }),
     );
-    return enhancedMatches;
+    return {
+      matches: enhancedMatches,
+      message: null
+    };
   }),
   fetchMatchCount: publicProcedure.query(async ({ ctx }) => {
     const userId = checkAuth();
@@ -135,13 +148,20 @@ export const matchRouter = createTRPCRouter({
       where: eq(hospitals.userId, userId),
     });
     if (!hospital) {
-      throw new Error("Hospital not found");
+      // Return 0 instead of throwing an error
+      return {
+        count: 0,
+        message: "Please create a hospital profile to view matches."
+      };
     }
     const matchesList = await ctx.db.query.matches.findMany({
       where: eq(matches.hospitalId, hospital.id),
     });
 
-    return matchesList.length;
+    return {
+      count: matchesList.length,
+      message: null
+    };
   }),
   runMatch: publicProcedure.query(async ({ ctx }) => {
     const userId = checkAuth();
