@@ -31,7 +31,10 @@ const Footer = () => {
           </SignedIn>
         </nav> */}
         <p className="mt-8 text-center text-xs leading-6 ">
-          © 2024 ECMO Bridge. All rights reserved.
+          © 2025 Mayo Clinic and Arizona State University. All rights reserved.
+          <br />
+          <br />
+          <Link href="https://www.mayo.edu/privacy-policy">Privacy Policy</Link>
         </p>
       </div>
     </section>
