@@ -13,7 +13,6 @@ ECMO Bridge is a state-of-the-art application designed to efficiently allocate E
 - [x] Design backend (matching) logic
 - [ ] Matchlist.ts
 - [ ] Patients & ECMOs
-- [ ] 
 - [ ] Realtime matching update
 - [ ] Maybe add Clerk blocklist?
       
