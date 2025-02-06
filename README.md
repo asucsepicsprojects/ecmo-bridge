@@ -11,10 +11,29 @@ ECMO Bridge is a state-of-the-art application designed to efficiently allocate E
 - [x] Integrate tRPC for type-safe remote procedure calls
 - [x] Add footer
 - [x] Design backend (matching) logic
-- [ ] Matchlist.ts
-- [ ] Patients & ECMOs
-- [ ] Realtime matching update
-- [ ] Maybe add Clerk blocklist?
+- [ ] Unlock Patients & ECMOs
+      - [ ] Should have a list of patients on the left hand side, in any order
+      - [ ] Google Map of Arizona with ECMO device
+- [ ] Realtime matching update between ECMO hospitals and patients
+      - [ ] Create an algorithm to match patients to ECMO hospitals
+
+- [ ]  Add Clerk blocklist
+      - [ ]  Protection from bots
+       
+- [ ] Design Dashboard should include:
+      - [ ] Button to Patient & ECMOs,
+      - [ ] Button to MatchList,
+      - [ ] Button to Settings,
+      - [ ] Button to Home
+      
+- [ ] Unlock Match List:
+- [ ] 
+
+- [ ] Unlock Settings:
+      - [ ] Add patient
+      - [ ] Delete patient
+      - [ ] Update/Change doctor
+
       
 
 ## Key Features
