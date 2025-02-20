@@ -6,6 +6,7 @@ import { Callout } from "@tremor/react";
 import { AlertCircleIcon } from "lucide-react";
 import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
 import { Badge } from "@tremor/react";
+
 const SettingsPage = async () => {
   const hospital = await api.hospital.get();
 
@@ -48,11 +49,7 @@ const SettingsPage = async () => {
             title="Need to update your information?"
             color="purple"
           >
-            If you need to update your hospital's information or have any
-            questions, please reach out to us.{" "}
-            <Link href="/about" className="hover:underline">
-              Learn more &gt;
-            </Link>
+            Contact support if you need to modify your hospital details.
           </Callout>
         </div>
       </div>
