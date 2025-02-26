@@ -1,18 +1,31 @@
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
+import mongoose from 'mongoose';
+import connectMongoDB from "./mongodb";
 
-import { env } from "~/env";
-import * as schema from "./schema";
+// MongoDB Connection
+async function initMongoConnection() {
+  try {
+    const connection = await connectMongoDB();
+    return connection;
+  } catch (error) {
+    console.error('❌ Failed to establish MongoDB connection:', error);
+    return null;
+  }
+}
 
-/**
- * Cache the database connection in development. This avoids creating a new connection on every HMR
- * update.
- */
-const globalForDb = globalThis as unknown as {
-  conn: postgres.Sql | undefined;
-};
+export const mongoClient = initMongoConnection();
 
-const conn = globalForDb.conn ?? postgres(env.DATABASE_URL);
-if (env.NODE_ENV !== "production") globalForDb.conn = conn;
-
-export const db = drizzle(conn, { schema });
+export async function testMongoDBConnection() {
+  try {
+    const connection = await mongoClient;
+    if (connection) {
+      console.log('✅ MongoDB connection successful');
+      return true;
+    } else {
+      console.error('❌ MongoDB connection failed');
+      return false;
+    }
+  } catch (error) {
+    console.error('❌ MongoDB connection test failed:', error);
+    return false;
+  }
+}
