@@ -45,6 +45,9 @@ export type ECMO = {
   serial: string;
   type: string;
   inUse: boolean;
+  lat: number;    // Added for map coordinates
+  lng: number;    // Added for map coordinates
+  hospital: string;
 };
 
 export const ECMOColumns: ColumnDef<ECMO>[] = [
