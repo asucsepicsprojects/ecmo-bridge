@@ -24,7 +24,20 @@ import { Input } from "~/components/ui/input";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { getCurrentDateTime } from "~/server/api/functions";
+
+const getCurrentDateTime = () => {
+  const now = new Date();
+  const date = now.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+  const time = now.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  return `${date} at ${time}`;
+};
 
 export function PatientForm() {
   const router = useRouter();

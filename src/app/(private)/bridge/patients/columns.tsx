@@ -32,23 +32,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-
 import { Input } from "~/components/ui/input";
-
-export type Patient = {
-  id: number;
-  name: string;
-  age: number;
-  specialCare: string;
-  ecmoType: string;
-};
 import { useCallback } from "react";
 import { CardContent } from "~/components/ui/card";
 import { Label } from "@radix-ui/react-label";
 import { useState } from "react";
 import { set } from "date-fns";
 import { toast } from "sonner";
-import { getCurrentDateTime } from "~/server/api/functions";
+
+const getCurrentDateTime = () => {
+  const now = new Date();
+  const date = now.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+  const time = now.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  return `${date} at ${time}`;
+};
 
 const editPatientSchema = z.object({
   name: z.string().min(1, { message: "Minimum 1 character required" }).max(30),
