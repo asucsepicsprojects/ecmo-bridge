@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { api } from "~/trpc/react";
 import {
   Table,
   TableBody,
@@ -13,47 +12,79 @@ import {
 import CountUp from "react-countup";
 import BarLoader from "react-spinners/BarLoader";
 
+// Mock data for matches
+const mockMatches = [
+  {
+    id: 1,
+    patientName: "John Doe",
+    ecmoType: "PULMONARY",
+    location: "Phoenix Children's Hospital",
+    distance: 12.5,
+    duration: 25,
+    ecmoId: 33946
+  },
+  {
+    id: 2,
+    patientName: "Jane Smith",
+    ecmoType: "CARDIAC",
+    location: "Banner University Medical Center Tucson",
+    distance: 120.3,
+    duration: 145,
+    ecmoId: 33947
+  },
+  {
+    id: 3,
+    patientName: "Michael Johnson",
+    ecmoType: "ECPR",
+    location: "Mayo Clinic Hospital - Arizona",
+    distance: 8.7,
+    duration: 18,
+    ecmoId: 33948
+  },
+  {
+    id: 4,
+    patientName: "Sarah Wilson",
+    ecmoType: "PULMONARY",
+    location: null,
+    distance: null,
+    duration: null,
+    ecmoId: null
+  },
+  {
+    id: 5,
+    patientName: "David Brown",
+    ecmoType: "CARDIAC",
+    location: "St. Joseph's Hospital and Medical Center",
+    distance: 15.2,
+    duration: 30,
+    ecmoId: 33949
+  }
+];
+
 const MatchList = () => {
-  const query = api.match.runMatch.useQuery();
-  const matches = query.data;
-  const [isComplete, setIsComplete] = useState(false); // State to track if counting should stop
+  const [isLoading, setIsLoading] = useState(true);
+  const [isComplete, setIsComplete] = useState(false);
+
+  // Simulate loading state
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000); // 2 second loading time
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // Reset count up completion state on new loading
   useEffect(() => {
-    if (query.isLoading) {
+    if (isLoading) {
       setIsComplete(false);
     }
-  }, [query.isLoading]);
+  }, [isLoading]);
 
-  if (query.isLoading && !isComplete) {
+  if (isLoading && !isComplete) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        {/* <CountUp
-          start={0}
-          end={100}
-          duration={4.5}
-          onEnd={() => {
-            setIsComplete(true); // Set completion when count up finishes
-          }}
-        >
-          {({ countUpRef }) => (
-            <div>
-              <span
-                className="text-3xl font-semibold text-primary-purple-900"
-                ref={countUpRef}
-              />
-            </div>
-          )}
-        </CountUp> */}
         <BarLoader color="#8d33ff" width={250} />
-      </div>
-    );
-  }
-
-  if (query.error) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        {query.error.message}
       </div>
     );
   }
@@ -72,7 +103,7 @@ const MatchList = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {matches?.map((match: any) => (
+          {mockMatches.map((match) => (
             <TableRow key={match.id}>
               <TableCell>{match.patientName}</TableCell>
               <TableCell>

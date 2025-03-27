@@ -37,20 +37,7 @@ import { Input } from "~/components/ui/input";
 import { useState } from "react";
 import { Label } from "~/components/ui/label";
 import { toast } from "sonner";
-
-const getCurrentDateTime = () => {
-  const now = new Date();
-  const date = now.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-  const time = now.toLocaleTimeString("en-US", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-  return `${date} at ${time}`;
-};
+import { getCurrentDateTime } from "~/server/api/functions";
 
 export type ECMO = {
   id: number;
@@ -58,6 +45,9 @@ export type ECMO = {
   serial: string;
   type: string;
   inUse: boolean;
+  lat: number;    // Added for map coordinates
+  lng: number;    // Added for map coordinates
+  hospital: string;
 };
 
 export const ECMOColumns: ColumnDef<ECMO>[] = [

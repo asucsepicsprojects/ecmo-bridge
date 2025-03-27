@@ -1,3 +1,4 @@
+"use client";
 import {
   Card,
   CardContent,
@@ -18,13 +19,47 @@ import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { api } from "~/trpc/server";
 
-export async function RecentPatients() {
-  // Fetch data from the server
-  const patientsAll = await api.patient.get();
-  const patients = patientsAll.slice(0, 5);
+// Mock data for recent patients
+const mockPatients = [
+  {
+    id: 1,
+    name: "John Doe",
+    ecmoType: "PULMONARY",
+    specialCare: "PEDIATRIC",
+    age: 8
+  },
+  {
+    id: 2,
+    name: "Jane Smith",
+    ecmoType: "CARDIAC",
+    specialCare: "FIRST_RESPONDERS",
+    age: 34
+  },
+  {
+    id: 3,
+    name: "Michael Johnson",
+    ecmoType: "ECPR",
+    specialCare: "SINGLE_CARETAKERS",
+    age: 45
+  },
+  {
+    id: 4,
+    name: "Sarah Wilson",
+    ecmoType: "PULMONARY",
+    specialCare: "PREGNANT_PATIENTS",
+    age: 28
+  },
+  {
+    id: 5,
+    name: "David Brown",
+    ecmoType: "CARDIAC",
+    specialCare: "SHORT_TERM_SURVIVAL",
+    age: 62
+  }
+];
 
+export function RecentPatients() {
   return (
     <Card className="h-fit xl:col-span-2" x-chunk="dashboard-01-chunk-4">
       <CardHeader className="flex flex-row items-center">
@@ -54,13 +89,13 @@ export async function RecentPatients() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {patients.map((patient) => {
+            {mockPatients.map((patient) => {
               return (
                 <TableRow key={patient.id}>
                   <TableCell>
                     <div className="font-medium">{patient.name}</div>
                   </TableCell>
-                  <TableCell className=" xl:table-column">
+                  <TableCell className="xl:table-column">
                     <div className="hidden text-sm text-muted-foreground md:inline">
                       {patient.ecmoType
                         .toString()
@@ -74,7 +109,7 @@ export async function RecentPatients() {
                         .join(" ")}
                     </div>
                   </TableCell>
-                  <TableCell className=" xl:table-column">
+                  <TableCell className="xl:table-column">
                     <div className="hidden text-sm text-muted-foreground md:inline">
                       {patient.specialCare
                         .toString()
