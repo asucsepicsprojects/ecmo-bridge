@@ -24,69 +24,83 @@ const mockData = {
 const Dashboard = () => {
   return (
     <div className="flex min-h-screen w-full flex-col">
-      <main className="flex flex-1 flex-col gap-4  p-4 md:gap-8 md:p-8">
+      <div className="border-b">
+        <div className="flex h-16 items-center px-4 md:px-8">
+          <h1 className="text-2xl font-bold">Dashboard</h1>
+        </div>
+      </div>
+      <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
         <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-          <Card x-chunk="dashboard-01-chunk-0">
+          <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
                 Total Patients
               </CardTitle>
               <UsersRound className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent className="px-6">
+            <CardContent>
               <div className="text-2xl font-bold">{mockData.totalPatientCount}</div>
               <p className="text-xs text-muted-foreground">
                 total patients currently need an ECMO
               </p>
             </CardContent>
           </Card>
-          <Card x-chunk="dashboard-01-chunk-1">
+          <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
                 Your Patients
               </CardTitle>
               <UserCheck className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent className="px-6">
+            <CardContent>
               <div className="text-2xl font-bold">{mockData.patientCount}</div>
               <p className="text-xs text-muted-foreground">
                 patients from your hospital
               </p>
             </CardContent>
           </Card>
-          <Card x-chunk="dashboard-01-chunk-2">
+          <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
                 ECMO Machines
               </CardTitle>
               <CreditCard className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent className="px-6">
+            <CardContent>
               <div className="text-2xl font-bold">{mockData.ecmoCount}</div>
               <p className="text-xs text-muted-foreground">
-                are machines from your hospital
+                available machines in your hospital
               </p>
             </CardContent>
           </Card>
-          <Card x-chunk="dashboard-01-chunk-3">
+          <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Actively Matched Patients
+                Active Matches
               </CardTitle>
               <Activity className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
-            <CardContent className="px-6">
+            <CardContent>
               <div className="text-2xl font-bold">{mockData.matchCount}</div>
-              <p className="text-xs text-muted-foreground">total matches</p>
+              <p className="text-xs text-muted-foreground">
+                current active matches
+              </p>
             </CardContent>
           </Card>
         </div>
-        <div>
-          <PatientChart />
-        </div>
-        <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-          <RecentPatients />
-          <MatchedPatients />
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+          <Card className="col-span-4">
+            <CardHeader>
+              <CardTitle>Patient Overview</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <PatientChart />
+            </CardContent>
+          </Card>
+          <div className="col-span-3 space-y-4">
+            <RecentPatients />
+            <MatchedPatients />
+          </div>
         </div>
       </main>
     </div>
