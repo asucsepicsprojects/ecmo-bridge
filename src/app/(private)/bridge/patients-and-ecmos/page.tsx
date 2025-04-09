@@ -3,7 +3,7 @@ import { ECMOForm } from "../_components/ecmo-form";
 import { api } from "~/trpc/server";
 import { ECMO, ECMOColumns } from "./columns";
 import { ECMODataTable } from "./data-table";
-import { Patient, PatientColumns } from "../patients/columns";
+import { PatientColumns } from "../patients/columns";
 import { PatientDataTable } from "../patients/data-table";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";

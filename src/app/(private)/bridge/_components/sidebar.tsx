@@ -5,6 +5,7 @@ import {
   HomeIcon,
   LayoutDashboardIcon,
   SettingsIcon,
+  BellIcon,
 } from "lucide-react";
 import Link from "next/link";
 import React from "react";
@@ -16,6 +17,7 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "~/components/ui/tooltip";
+import { Badge } from "~/components/ui/badge";
 
 const Sidebar = () => {
   const currentRoute = usePathname();
@@ -95,6 +97,29 @@ const Sidebar = () => {
           </TooltipProvider>
         </div>
         <div className="mt-2 flex flex-col items-center border-t border-gray-700 text-white">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  className={linkClasses("/bridge/notifications")}
+                  href="/bridge/notifications"
+                >
+                  <div className="relative">
+                    <BellIcon size={18} />
+                    <Badge 
+                      variant="destructive" 
+                      className="absolute -right-1 -top-1 h-4 w-4 p-0 flex items-center justify-center"
+                    >
+                      3
+                    </Badge>
+                  </div>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>Notifications</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
