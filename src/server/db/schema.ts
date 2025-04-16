@@ -19,7 +19,7 @@ export const chatMessages = pgTable('chat_messages', {
   senderId: text('sender_id').notNull(), // Clerk user ID
   receiverId: text('receiver_id'), // Optional: for direct messages between users
   roomId: text('room_id'), // For group chats or channels
-  read: text('read').default('false'),
+  read: boolean('read').default(false),
   createdAt: timestamp('created_at').defaultNow(),
 });
 
