@@ -5,6 +5,7 @@ import {
   HomeIcon,
   LayoutDashboardIcon,
   SettingsIcon,
+  MessageSquareIcon,
 } from "lucide-react";
 import Link from "next/link";
 import React from "react";
@@ -90,6 +91,21 @@ const Sidebar = () => {
               </TooltipTrigger>
               <TooltipContent side="right">
                 <p>Match List</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  className={linkClasses("/bridge/chat")}
+                  href="/bridge/chat"
+                >
+                  <MessageSquareIcon size={18} />
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>Chat</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
