@@ -90,7 +90,7 @@ const mockAvailablePatients = [
     condition: "ARDS",
     priority: "High",
     waitingTime: "45 min",
-    location: "Banner Health",
+    location: "Mayo Clinic",
   },
   {
     id: 103,
@@ -99,7 +99,7 @@ const mockAvailablePatients = [
     condition: "Cardiogenic Shock",
     priority: "Medium",
     waitingTime: "1 hour",
-    location: "St. Mary's Hospital",
+    location: "Mayo Clinic",
   },
   {
     id: 104,
@@ -108,7 +108,7 @@ const mockAvailablePatients = [
     condition: "COVID-19",
     priority: "High",
     waitingTime: "15 min",
-    location: "Phoenix General",
+    location: "Mayo Clinic",
   },
 ];
 
@@ -125,21 +125,21 @@ const mockAvailableDevices = [
     id: 202,
     type: "VV ECMO",
     status: "Available",
-    location: "Banner Health",
+    location: "Mayo Clinic",
     lastUsed: "1 day ago",
   },
   {
     id: 203,
     type: "VA ECMO",
     status: "Available",
-    location: "St. Mary's Hospital",
+    location: "Mayo Clinic",
     lastUsed: "3 days ago",
   },
   {
     id: 204,
     type: "VV ECMO",
     status: "Available",
-    location: "Phoenix General",
+    location: "Mayo Clinic",
     lastUsed: "4 days ago",
   },
 ];
@@ -204,6 +204,17 @@ const getDeviceStatusBadge = (status: string) => {
   }
 };
 
+const getPriorityValue = (priority: string) => {
+  switch (priority) {
+    case "High":
+      return 1;
+    case "Medium":
+      return 2;
+    default:
+      return 3;
+  }
+};
+
 const MatchListPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [activeMatches, setActiveMatches] = useState(mockMatches);
@@ -213,7 +224,9 @@ const MatchListPage = () => {
   const [filterHospital, setFilterHospital] = useState("ALL");
   const [selectedPatient, setSelectedPatient] = useState<number | null>(null);
   const [selectedDevice, setSelectedDevice] = useState<number | null>(null);
-  const [availablePatients, setAvailablePatients] = useState(mockAvailablePatients);
+  const [availablePatients, setAvailablePatients] = useState(
+    mockAvailablePatients.sort((a, b) => getPriorityValue(a.priority) - getPriorityValue(b.priority))
+  );
   const [availableDevices, setAvailableDevices] = useState(mockAvailableDevices);
 
   // Simulate loading state
@@ -226,6 +239,15 @@ const MatchListPage = () => {
 
   const handleRemoveMatch = (id: number) => {
     setActiveMatches(activeMatches.filter(match => match.id !== id));
+  };
+
+  const handleTerminateMatch = (matchId: number) => {
+    const match = activeMatches.find(m => m.id === matchId);
+    if (match) {
+      // Simply remove from active matches
+      setActiveMatches(activeMatches.filter(m => m.id !== matchId));
+      toast.success(`Terminated match for ${match.patientName}`);
+    }
   };
 
   const filteredMatches = activeMatches.filter(match => {
@@ -247,38 +269,36 @@ const MatchListPage = () => {
   };
 
   const handleCreateMatch = () => {
-    if (!selectedPatient || !selectedDevice) {
-      toast.error("Please select both a patient and a device");
-      return;
-    }
+    if (selectedPatient && selectedDevice) {
+      const selectedPatientData = availablePatients.find(p => p.id === selectedPatient);
+      const selectedDeviceData = availableDevices.find(d => d.id === selectedDevice);
 
-    const patient = availablePatients.find(p => p.id === selectedPatient);
-    const device = availableDevices.find(d => d.id === selectedDevice);
+      if (selectedPatientData && selectedDeviceData) {
+        // Create new match
+        const newMatch = {
+          id: activeMatches.length + 1,
+          patientName: selectedPatientData.name,
+          ecmoType: selectedDeviceData.type,
+          location: selectedDeviceData.location,
+          distance: "0 miles",
+          duration: "0 hours",
+          status: "active",
+          isMyHospital: true
+        };
 
-    if (patient && device) {
-      // Create new match
-      const newMatch = {
-        id: activeMatches.length + 1,
-        patientName: patient.name,
-        ecmoType: device.type,
-        location: device.location,
-        distance: "0 miles",
-        duration: "0 hours",
-        status: "active",
-      };
+        // Add to active matches
+        setActiveMatches([...activeMatches, newMatch]);
 
-      // Add to active matches
-      setActiveMatches([...activeMatches, newMatch]);
+        // Remove selected items from available lists
+        setAvailablePatients(availablePatients.filter(p => p.id !== selectedPatient));
+        setAvailableDevices(availableDevices.filter(d => d.id !== selectedDevice));
+        
+        // Reset selections
+        setSelectedPatient(null);
+        setSelectedDevice(null);
 
-      // Remove selected items from available lists
-      setAvailablePatients(availablePatients.filter(p => p.id !== selectedPatient));
-      setAvailableDevices(availableDevices.filter(d => d.id !== selectedDevice));
-      
-      // Reset selections
-      setSelectedPatient(null);
-      setSelectedDevice(null);
-
-      toast.success(`Created match for ${patient.name} with ${device.type}`);
+        toast.success(`Created match for ${selectedPatientData.name} with ${selectedDeviceData.type}`);
+      }
     }
   };
 
@@ -308,7 +328,7 @@ const MatchListPage = () => {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>Active Matches</CardTitle>
+                <CardTitle className="text-2xl">Active Matches</CardTitle>
                 <CardDescription>Currently active ECMO patient matches</CardDescription>
               </div>
               <div className="flex items-center gap-2">
@@ -361,9 +381,17 @@ const MatchListPage = () => {
                         </div>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button variant="outline" size="sm">
-                          View Details
-                        </Button>
+                        <div className="flex justify-end gap-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleTerminateMatch(match.id)}
+                            disabled={match.status !== "active"}
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Terminate
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -377,7 +405,7 @@ const MatchListPage = () => {
         <Card>
           <CardHeader>
             <div>
-              <CardTitle>Create New Match</CardTitle>
+              <CardTitle className="text-2xl">Create New Match</CardTitle>
               <CardDescription>Select a patient and available ECMO device to create a new match</CardDescription>
             </div>
           </CardHeader>
@@ -385,7 +413,7 @@ const MatchListPage = () => {
             {/* Available Patients Section */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold">Available Patients</h3>
+                <h3 className="text-2xl font-semibold ml-4">Available Patients</h3>
                 <div className="flex items-center gap-2">
                   <Input
                     placeholder="Search patients..."
@@ -450,7 +478,7 @@ const MatchListPage = () => {
             {/* Available Devices Section */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold">Available Devices</h3>
+                <h3 className="text-2xl font-semibold ml-4">Available Devices</h3>
                 <div className="flex items-center gap-2">
                   <Select>
                     <SelectTrigger className="w-[180px]">

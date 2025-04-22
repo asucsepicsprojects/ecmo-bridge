@@ -66,7 +66,7 @@ export function PatientDataTable<TData, TValue>({
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-2xl font-bold">Patients</CardTitle>
+            <CardTitle className="text-3xl font-bold">Patients</CardTitle>
             <p className="text-sm text-muted-foreground">
               Manage and view patient information
             </p>
@@ -156,7 +156,7 @@ export function PatientDataTable<TData, TValue>({
           </div>
 
           <div className="flex items-center justify-between">
-            <div className="flex-1 text-sm text-muted-foreground">
+            <div className="flex-1 text-sm ml-4 text-muted-foreground">
               {table.getFilteredRowModel().rows.length} patients total
             </div>
             <div className="flex items-center space-x-2">
