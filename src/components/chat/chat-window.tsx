@@ -73,7 +73,7 @@ export function ChatWindow({ roomId }: ChatWindowProps) {
       const pusher = getPusherClient();
       const channel = pusher.subscribe(`chat-room-${roomId}`);
       
-      channel.bind("new-message", (data: { message: any }) => {
+      channel.bind("new-message", (data: { message: Message }) => {
         // Only add the message if it's not from the current user (to avoid duplicates)
         if (data.message && data.message.senderId !== user?.id) {
           setMessages((prev) => [...prev, data.message]);

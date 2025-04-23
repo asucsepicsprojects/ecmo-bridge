@@ -5,6 +5,13 @@ alwaysApply: true
 ---
 # Security Checklist (What can be done in CursorAI & software-level not infrastructure!)
 
+## Healthcare Chat-Specific Security
+ - [ ] Use strong end-to-end encryption (e.g., AES-256 for data at rest, TLS 1.2+ for data in transit)
+ - [ ] Enforce robust authentication protocols with multi-factor authentication (MFA) and implement RBAC for PHI access
+ - [ ] Maintain comprehensive audit logs for all user interactions to ensure accountability and facilitate breach investigations
+ - [ ] Implement automatic log-off and session timeout for inactive sessions
+ - [ ] Regularly conduct risk assessments and compliance audits (e.g., HIPAA, GDPR) with clear data retention and deletion policies
+ - [ ] Include disclaimers outlining the appropriate use of the chat platform for healthcare communications
 ## Configuration Security
 - [x] Detect secrets in code
 - [x] Identify secrets committed to version control
