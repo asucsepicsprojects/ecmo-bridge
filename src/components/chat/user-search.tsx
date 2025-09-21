@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { api } from "~/trpc/react";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "~/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
@@ -20,30 +20,33 @@ export function UserSearch({ onUserSelect, disabled = false }: UserSearchProps) 
   const debouncedQuery = useDebounce(searchQuery, 300);
   const { userId: currentUserId } = useAuth();
 
-  // Fetch users with the search query
+  // Memoize the query parameter to prevent unnecessary re-renders
+  const queryParam = useMemo(() => ({ query: debouncedQuery }), [debouncedQuery]);
+
+  // Single query that handles both search and all users
   const { data: users = [], isLoading } = api.user.search.useQuery(
-    { query: debouncedQuery },
+    queryParam,
     { 
-      enabled: debouncedQuery.trim().length > 0 && open,
+      enabled: open, // Only fetch when popover is open
       staleTime: 1000 * 60 * 5, // 5 minutes
+      refetchOnWindowFocus: false, // Prevent refetch on window focus
+      refetchOnMount: false, // Prevent refetch on mount if data exists
     }
   );
 
-  // Fetch all users if no search query
-  const { data: allUsers = [], isLoading: isLoadingAll } = api.user.getAll.useQuery(
-    undefined,
-    { 
-      enabled: debouncedQuery.trim().length === 0 && open,
-      staleTime: 1000 * 60 * 5, // 5 minutes
-    }
-  );
+  const displayUsers = users;
+  const isSearching = isLoading;
 
-  // Use search results when there's a query, otherwise use all users
-  const displayUsers = debouncedQuery.trim().length > 0 ? users : allUsers;
-  const isSearching = (debouncedQuery.trim().length > 0 && isLoading) || (debouncedQuery.trim().length === 0 && isLoadingAll);
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+    // Reset search query when popover closes
+    if (!newOpen) {
+      setSearchQuery("");
+    }
+  };
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"

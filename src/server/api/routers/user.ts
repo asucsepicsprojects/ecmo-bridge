@@ -12,9 +12,12 @@ export const userRouter = createTRPCRouter({
       const userId = checkAuth();
       
       // Get users from Clerk
-      const users = await clerkClient.users.getUserList({
+      const usersResponse = await clerkClient.users.getUserList({
         limit: 100,
       });
+      
+      // Extract the users array from the response
+      const users = usersResponse.data || [];
       
       // Filter out sensitive information and the current user
       return users
@@ -29,7 +32,7 @@ export const userRouter = createTRPCRouter({
     }
   }),
   
-  // Search users by name or email
+  // Search users by name or email (returns all users if query is empty)
   search: publicProcedure
     .input(z.object({ query: z.string() }))
     .query(async ({ input }) => {
@@ -37,20 +40,28 @@ export const userRouter = createTRPCRouter({
         const userId = checkAuth();
         const { query } = input;
         
-        if (!query.trim()) return [];
-        
         // Get users from Clerk
-        const users = await clerkClient.users.getUserList({
+        const usersResponse = await clerkClient.users.getUserList({
           limit: 100,
         });
         
-        // Filter and search users
-        return users
-          .filter(user => user.id !== userId) // Exclude current user
+        // Extract the users array from the response
+        const users = usersResponse.data || [];
+        
+        // Filter out current user
+        const filteredUsers = users.filter(user => user.id !== userId);
+        
+        // If no query, return all users
+        if (!query.trim()) {
+          return filteredUsers.map(user => filterUserForClient(user));
+        }
+        
+        // Filter and search users based on query
+        const searchQuery = query.toLowerCase();
+        return filteredUsers
           .filter(user => {
             const fullName = `${user.firstName || ""} ${user.lastName || ""}`.toLowerCase();
             const email = user.emailAddresses[0]?.emailAddress?.toLowerCase() || "";
-            const searchQuery = query.toLowerCase();
             
             return fullName.includes(searchQuery) || email.includes(searchQuery);
           })
