@@ -60,36 +60,39 @@ export function UserSearch({ onUserSelect, disabled = false }: UserSearchProps) 
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[300px] p-0">
-        <Command>
-          <CommandInput 
+        <div className="space-y-2">
+          <input 
             placeholder="Search users..." 
             value={searchQuery}
-            onValueChange={setSearchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full px-3 py-2 border rounded-md"
           />
-          <CommandList>
+          <div className="max-h-60 overflow-y-auto">
             {isSearching ? (
               <div className="flex items-center justify-center py-6">
                 <Loader2 className="h-6 w-6 animate-spin text-primary" />
               </div>
             ) : (
               <>
-                <CommandEmpty>No users found.</CommandEmpty>
-                <CommandGroup>
-                  {displayUsers.map((user) => (
-                    <CommandItem
-                      key={user.id}
-                      value={user.id}
-                      onSelect={() => {
-                        onUserSelect({
-                          id: user.id,
-                          name: user.name,
-                          image: user.image,
-                        });
-                        setSearchQuery("");
-                        setOpen(false);
-                      }}
-                    >
-                      <div className="flex items-center">
+                {displayUsers.length === 0 ? (
+                  <div className="px-3 py-2 text-sm text-muted-foreground">No users found.</div>
+                ) : (
+                  <div className="space-y-1">
+                    {displayUsers.map((user) => (
+                      <div
+                        key={user.id}
+                        onClick={() => {
+                          console.log("User clicked:", user);
+                          onUserSelect({
+                            id: user.id,
+                            name: user.name,
+                            image: user.image,
+                          });
+                          setSearchQuery("");
+                          setOpen(false);
+                        }}
+                        className="flex items-center p-2 rounded-md hover:bg-accent cursor-pointer"
+                      >
                         <div className="mr-2 flex h-6 w-6 items-center justify-center rounded-full bg-secondary">
                           {user.image ? (
                             // eslint-disable-next-line @next/next/no-img-element
@@ -107,13 +110,13 @@ export function UserSearch({ onUserSelect, disabled = false }: UserSearchProps) 
                           <p className="text-xs text-muted-foreground">{user.email}</p>
                         </div>
                       </div>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
+                    ))}
+                  </div>
+                )}
               </>
             )}
-          </CommandList>
-        </Command>
+          </div>
+        </div>
       </PopoverContent>
     </Popover>
   );

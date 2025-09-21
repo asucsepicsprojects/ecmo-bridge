@@ -65,10 +65,14 @@ export function NewChatForm({ onSuccess }: NewChatFormProps) {
   const participants = form.watch("participants");
 
   const addParticipant = (user: { id: string; name: string; image?: string }) => {
+    console.log("addParticipant called with:", user);
     const currentParticipants = form.getValues("participants");
     // Check if user already exists in participants
     if (!currentParticipants.some((p) => p.id === user.id)) {
       form.setValue("participants", [...currentParticipants, user]);
+      console.log("Participant added:", [...currentParticipants, user]);
+    } else {
+      console.log("User already exists in participants");
     }
   };
 
