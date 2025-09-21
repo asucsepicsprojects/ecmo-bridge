@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { api } from "~/trpc/react";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "~/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
@@ -20,30 +20,33 @@ export function UserSearch({ onUserSelect, disabled = false }: UserSearchProps) 
   const debouncedQuery = useDebounce(searchQuery, 300);
   const { userId: currentUserId } = useAuth();
 
-  // Fetch users with the search query
+  // Memoize the query parameter to prevent unnecessary re-renders
+  const queryParam = useMemo(() => ({ query: debouncedQuery }), [debouncedQuery]);
+
+  // Single query that handles both search and all users
   const { data: users = [], isLoading } = api.user.search.useQuery(
-    { query: debouncedQuery },
+    queryParam,
     { 
-      enabled: debouncedQuery.trim().length > 0 && open,
+      enabled: open, // Only fetch when popover is open
       staleTime: 1000 * 60 * 5, // 5 minutes
+      refetchOnWindowFocus: false, // Prevent refetch on window focus
+      refetchOnMount: false, // Prevent refetch on mount if data exists
     }
   );
 
-  // Fetch all users if no search query
-  const { data: allUsers = [], isLoading: isLoadingAll } = api.user.getAll.useQuery(
-    undefined,
-    { 
-      enabled: debouncedQuery.trim().length === 0 && open,
-      staleTime: 1000 * 60 * 5, // 5 minutes
-    }
-  );
+  const displayUsers = users;
+  const isSearching = isLoading;
 
-  // Use search results when there's a query, otherwise use all users
-  const displayUsers = debouncedQuery.trim().length > 0 ? users : allUsers;
-  const isSearching = (debouncedQuery.trim().length > 0 && isLoading) || (debouncedQuery.trim().length === 0 && isLoadingAll);
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+    // Reset search query when popover closes
+    if (!newOpen) {
+      setSearchQuery("");
+    }
+  };
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
@@ -57,36 +60,39 @@ export function UserSearch({ onUserSelect, disabled = false }: UserSearchProps) 
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[300px] p-0">
-        <Command>
-          <CommandInput 
+        <div className="space-y-2">
+          <input 
             placeholder="Search users..." 
             value={searchQuery}
-            onValueChange={setSearchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full px-3 py-2 border rounded-md"
           />
-          <CommandList>
+          <div className="max-h-60 overflow-y-auto">
             {isSearching ? (
               <div className="flex items-center justify-center py-6">
                 <Loader2 className="h-6 w-6 animate-spin text-primary" />
               </div>
             ) : (
               <>
-                <CommandEmpty>No users found.</CommandEmpty>
-                <CommandGroup>
-                  {displayUsers.map((user) => (
-                    <CommandItem
-                      key={user.id}
-                      value={user.id}
-                      onSelect={() => {
-                        onUserSelect({
-                          id: user.id,
-                          name: user.name,
-                          image: user.image,
-                        });
-                        setSearchQuery("");
-                        setOpen(false);
-                      }}
-                    >
-                      <div className="flex items-center">
+                {displayUsers.length === 0 ? (
+                  <div className="px-3 py-2 text-sm text-muted-foreground">No users found.</div>
+                ) : (
+                  <div className="space-y-1">
+                    {displayUsers.map((user) => (
+                      <div
+                        key={user.id}
+                        onClick={() => {
+                          console.log("User clicked:", user);
+                          onUserSelect({
+                            id: user.id,
+                            name: user.name,
+                            image: user.image,
+                          });
+                          setSearchQuery("");
+                          setOpen(false);
+                        }}
+                        className="flex items-center p-2 rounded-md hover:bg-accent cursor-pointer"
+                      >
                         <div className="mr-2 flex h-6 w-6 items-center justify-center rounded-full bg-secondary">
                           {user.image ? (
                             // eslint-disable-next-line @next/next/no-img-element
@@ -104,13 +110,13 @@ export function UserSearch({ onUserSelect, disabled = false }: UserSearchProps) 
                           <p className="text-xs text-muted-foreground">{user.email}</p>
                         </div>
                       </div>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
+                    ))}
+                  </div>
+                )}
               </>
             )}
-          </CommandList>
-        </Command>
+          </div>
+        </div>
       </PopoverContent>
     </Popover>
   );
