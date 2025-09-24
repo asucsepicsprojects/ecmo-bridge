@@ -18,7 +18,7 @@ import { api } from "~/trpc/react";
 import { useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { getCurrentDateTime } from "~/server/api/functions";
+import { getCurrentDateTime } from "~/lib/client-utils";
 
 const formSchema = z.object({
   name: z.string().min(8).max(100),
