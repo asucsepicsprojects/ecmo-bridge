@@ -158,6 +158,28 @@ export const matchRouter = createTRPCRouter({
     return matches;
   }),
 
+  runMatch: publicProcedure.query(async () => {
+    const userId = checkAuth();
+
+    // Get all matches for the user with populated data
+    const matches = await Match.find({ userId })
+      .populate('patientId')
+      .populate('ecmoId');
+
+    // Transform the data to match the expected format in the UI
+    const transformedMatches = matches.map((match: any) => ({
+      id: match._id,
+      patientName: match.patientId?.name || 'Unknown Patient',
+      ecmoType: match.ecmoId?.type || 'Unknown Type',
+      ecmoId: match.ecmoId?._id || null,
+      location: match.ecmoId?.coordinates ? `${match.ecmoId.coordinates.lat}, ${match.ecmoId.coordinates.lng}` : null,
+      distance: null, // TODO: Calculate distance if needed
+      duration: null, // TODO: Calculate duration if needed
+    }));
+
+    return transformedMatches;
+  }),
+
   findPotentialMatches: publicProcedure
     .input(z.object({
       patientId: z.string(),
