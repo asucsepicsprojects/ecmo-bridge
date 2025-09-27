@@ -48,7 +48,7 @@ import { Label } from "@radix-ui/react-label";
 import { useState } from "react";
 import { set } from "date-fns";
 import { toast } from "sonner";
-import { getCurrentDateTime } from "~/server/api/functions";
+import { getCurrentDateTime } from "~/lib/client-utils";
 
 const editPatientSchema = z.object({
   name: z.string().min(1, { message: "Minimum 1 character required" }).max(30),
