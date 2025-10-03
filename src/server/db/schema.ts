@@ -1,13 +1,29 @@
-import { pgTable, text, timestamp, uuid, boolean } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, uuid, boolean, integer } from 'drizzle-orm/pg-core';
+
+// Hospitals table for storing hospital information
+export const hospitals = pgTable('hospitals', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: text('user_id').notNull(), // Clerk user ID
+  name: text('name').notNull(),
+  coordinates: text('coordinates'), // JSON string for lat/lng
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+});
 
 export const patients = pgTable('patients', {
   id: uuid('id').primaryKey().defaultRandom(),
-  firstName: text('first_name').notNull(),
-  lastName: text('last_name').notNull(),
-  dateOfBirth: timestamp('date_of_birth'),
-  gender: text('gender'),
-  hospitalId: uuid('hospital_id'),
-  status: text('status', { enum: ['Active', 'Inactive'] }),
+  hospitalId: uuid('hospital_id').references(() => hospitals.id),
+  name: text('name').notNull(),
+  age: integer('age').notNull(),
+  coordinates: text('coordinates'), // JSON string for lat/lng
+  score: integer('score').notNull(),
+  specialCare: text('special_care', { 
+    enum: ['PEDIATRIC', 'FIRST_RESPONDERS', 'SINGLE_CARETAKERS', 'PREGNANT_PATIENTS', 'SHORT_TERM_SURVIVAL'] 
+  }).notNull(),
+  ecmoType: text('ecmo_type', { 
+    enum: ['PULMONARY', 'CARDIAC', 'ECPR'] 
+  }).notNull(),
+  isMatched: boolean('is_matched').default(false),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
 });

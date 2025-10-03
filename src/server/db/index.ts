@@ -40,7 +40,9 @@ try {
   // Only initialize postgres if DATABASE_URL is defined
   if (process.env.DATABASE_URL) {
     const connectionString = process.env.DATABASE_URL;
-    const client = postgres(connectionString, { ssl: true });
+    const client = postgres(connectionString, { 
+      ssl: { rejectUnauthorized: false }
+    });
     
     // Create drizzle instance
     db = drizzle(client, { schema });
