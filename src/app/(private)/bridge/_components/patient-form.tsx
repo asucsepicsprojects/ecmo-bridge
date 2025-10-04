@@ -24,8 +24,7 @@ import { Input } from "~/components/ui/input";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { getCurrentDateTime } from "~/server/api/functions";
-
+import { getCurrentDateTime } from "~/lib/client-utils";
 export function PatientForm() {
   const router = useRouter();
   const SpecialCareCategory = z.enum(
