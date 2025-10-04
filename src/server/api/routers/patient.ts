@@ -74,6 +74,11 @@ export const patientRouter = createTRPCRouter({
 
       const userId = checkAuth();
 
+      // Check if database is available
+      if (!ctx.db) {
+        throw new Error("Database connection not available. Please check DATABASE_URL environment variable.");
+      }
+
       const hospital = await ctx.db.query.hospitals.findFirst({
         where: (model, { eq }) => eq(model.userId, userId),
       });
@@ -133,6 +138,11 @@ export const patientRouter = createTRPCRouter({
     }),
   get: publicProcedure.query(async ({ ctx }) => {
     const userId = checkAuth();
+
+    // Check if database is available
+    if (!ctx.db) {
+      throw new Error("Database connection not available. Please check DATABASE_URL environment variable.");
+    }
 
     const hospital = await ctx.db.query.hospitals.findFirst({
       where: (model, { eq }) => eq(model.userId, userId),

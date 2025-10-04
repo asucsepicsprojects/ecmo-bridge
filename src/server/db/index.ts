@@ -35,7 +35,7 @@ export async function testMongoDBConnection() {
 }
 
 // Create postgres connection if DATABASE_URL exists
-let db;
+let db: ReturnType<typeof drizzle> | undefined;
 try {
   // Only initialize postgres if DATABASE_URL is defined
   if (process.env.DATABASE_URL) {
@@ -44,11 +44,14 @@ try {
     
     // Create drizzle instance
     db = drizzle(client, { schema });
+    console.log('✅ Drizzle database connection initialized');
   } else {
     console.warn('⚠️ DATABASE_URL not found in environment variables. Postgres connection not initialized.');
+    console.warn('⚠️ Some tRPC endpoints may not work without a database connection.');
   }
 } catch (error) {
   console.error('❌ Failed to establish Postgres connection:', error);
+  db = undefined;
 }
 
 export { db };

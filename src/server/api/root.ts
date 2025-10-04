@@ -4,6 +4,7 @@ import { ecmoRouter } from "~/server/api/routers/ecmo";
 import { matchRouter } from "~/server/api/routers/match";
 import { chatRouter } from "~/server/api/routers/chat";
 import { userRouter } from "~/server/api/routers/user";
+import { testValidationRouter } from "~/server/api/routers/test-validation";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 
 /**
@@ -18,6 +19,7 @@ export const appRouter = createTRPCRouter({
   match: matchRouter,
   chat: chatRouter,
   user: userRouter,
+  testValidation: testValidationRouter,
 });
 
 // export type definition of API

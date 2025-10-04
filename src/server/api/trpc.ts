@@ -9,7 +9,7 @@
 import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
-import { mongoClient } from "~/server/db";
+import { mongoClient, db } from "~/server/db";
 
 /**
  * 1. CONTEXT
@@ -27,6 +27,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
   const mongoConnection = await mongoClient;
   return {
     mongoConnection,
+    db,
     ...opts,
   };
 };

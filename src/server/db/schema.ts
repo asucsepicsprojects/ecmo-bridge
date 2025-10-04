@@ -1,13 +1,26 @@
 import { pgTable, text, timestamp, uuid, boolean } from 'drizzle-orm/pg-core';
 
+export const hospitals = pgTable('hospitals', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: text('user_id').notNull(), // Clerk user ID
+  name: text('name').notNull(),
+  address: text('address'),
+  coordinates: text('coordinates'), // JSON string for lat/lng
+  isVerified: boolean('is_verified').default(false),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+});
+
 export const patients = pgTable('patients', {
   id: uuid('id').primaryKey().defaultRandom(),
-  firstName: text('first_name').notNull(),
-  lastName: text('last_name').notNull(),
-  dateOfBirth: timestamp('date_of_birth'),
-  gender: text('gender'),
-  hospitalId: uuid('hospital_id'),
-  status: text('status', { enum: ['Active', 'Inactive'] }),
+  hospitalId: uuid('hospital_id').notNull(),
+  name: text('name').notNull(),
+  coordinates: text('coordinates'), // JSON string for lat/lng
+  age: text('age'),
+  score: text('score'),
+  specialCare: text('special_care'),
+  ecmoType: text('ecmo_type'),
+  isMatched: boolean('is_matched').default(false),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
 });
