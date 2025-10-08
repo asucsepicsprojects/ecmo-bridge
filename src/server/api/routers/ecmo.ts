@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { checkAuth } from "../functions";
-import mongoose, { Document, Model } from 'mongoose';
+import mongoose from 'mongoose';
 
 // Define MongoDB ECMO Schema
 const ECMOSchema = new mongoose.Schema({
@@ -19,23 +19,8 @@ const ECMOSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now },
 });
 
-// Define TypeScript interface for ECMO
-interface ECMODocument extends Document {
-  userId: string;
-  patientId: string;
-  startDate: Date;
-  endDate?: Date;
-  status: 'Active' | 'Completed' | 'Discontinued';
-  notes?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-// Define model type
-interface ECMOModel extends Model<ECMODocument> {}
-
 // Create or get existing model
-const ECMO = mongoose.models.ECMO as ECMOModel || mongoose.model<ECMODocument>('ECMO', ECMOSchema);
+const ECMO = mongoose.models.ECMO || mongoose.model('ECMO', ECMOSchema);
 
 export const createECMOSchema = z.object({
   patientId: z.string(),
