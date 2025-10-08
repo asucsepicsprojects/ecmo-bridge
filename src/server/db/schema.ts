@@ -5,7 +5,9 @@ export const hospitals = pgTable('hospitals', {
   id: uuid('id').primaryKey().defaultRandom(),
   userId: text('user_id').notNull(), // Clerk user ID
   name: text('name').notNull(),
+  address: text('address'),
   coordinates: text('coordinates'), // JSON string for lat/lng
+  isVerified: boolean('is_verified').default(false),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
 });
