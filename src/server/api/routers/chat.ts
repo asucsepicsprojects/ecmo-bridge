@@ -56,15 +56,10 @@ interface IChatRoomParticipant {
   id?: string;
 }
 
-// Create or get existing models with proper TypeScript types
-const ChatMessage = (mongoose.models.ChatMessage as mongoose.Model<IChatMessage>) || 
-  mongoose.model<IChatMessage>('ChatMessage', chatMessageSchema);
-
-const ChatRoom = (mongoose.models.ChatRoom as mongoose.Model<IChatRoom>) || 
-  mongoose.model<IChatRoom>('ChatRoom', chatRoomSchema);
-
-const ChatRoomParticipant = (mongoose.models.ChatRoomParticipant as mongoose.Model<IChatRoomParticipant>) || 
-  mongoose.model<IChatRoomParticipant>('ChatRoomParticipant', chatRoomParticipantSchema);
+// Create or get existing models
+const ChatMessage = mongoose.models.ChatMessage || mongoose.model('ChatMessage', chatMessageSchema);
+const ChatRoom = mongoose.models.ChatRoom || mongoose.model('ChatRoom', chatRoomSchema);
+const ChatRoomParticipant = mongoose.models.ChatRoomParticipant || mongoose.model('ChatRoomParticipant', chatRoomParticipantSchema);
 
 const messageSchema = z.object({
   content: z.string().min(1).max(1000),
