@@ -21,7 +21,7 @@ const newPatientSchema = z.object({
 });
 
 const editPatientSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   name: z.string().min(1).max(100).optional(),
   age: z.number().min(1).max(150).optional(),
   specialCare: z
